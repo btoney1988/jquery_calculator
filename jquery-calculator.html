@@ -81,27 +81,43 @@
       var firstNumber = "";
       var operator = null;
       var secondNumber = "";
+      var isCalculated = false;
+      var isOperationChosen = false;
 
+      
       $(".number").click(function (event) {
-        var number = $(this).val();
-        if (operator === null) {
-          $("#firstNumber").append(number);
-          firstNumber = number;
-        } else {
-          $("#secondNumber").append(number);
-          secondNumber = number;
+        if (isCalculated)  {
+          return false
         }
+        if (operator === null) {
+          firstNumber += $(this).val();
+          $("#firstNumber").text(firstNumber);
+        } else {
+          secondNumber += $(this).val();
+          $("#secondNumber").text(secondNumber);
+        }        
       });
 
       $(".operator").click(function (event) {
+        if (isCalculated || !firstNumber)  {
+          return false
+        }
+        
         operator = $(this).val();
-        $("#operator").append(operator);
+        $("#operator").text($(this).text());
+        isOperationChosen = true;
       });
+
       $(".equal").click(function (event) {
         var finalNumber = 0;
         var equal = $(this).val();
+        firstNumber = parseInt(firstNumber);
+        secondNumber = parseInt(secondNumber);
+        console.log(firstNumber);
+        console.log(secondNumber);
+
         if (operator === "plus") {
-          finalNumber = Number(firstNumber) + Number(secondNumber);
+          finalNumber = firstNumber + secondNumber;
         }
         if (operator === "minus") {
           finalNumber = firstNumber - secondNumber;
@@ -115,13 +131,18 @@
         if (operator === "power") {
           finalNumber = Math.pow(firstNumber, secondNumber);
         }
-        $("#result").append(finalNumber);
-
+        $("#result").text(finalNumber);
+        operator = null;
+        isCalculated = true;
       });
+
       $(".clear").click(function (event) {
         var clear = $(this).val();
         $("#firstNumber, #operator, #secondNumber, #result").empty();
-
+        operator = null;
+        firstNumber = "";
+        secondNumber = "";
+        isCalculated = false;
       });
 
 
